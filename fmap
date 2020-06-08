@@ -1,0 +1,85 @@
+#!/usr/bin/python3
+import sys
+import os
+import socket
+
+
+nmapDefaultArgs = "-sV -sC -T5"
+nmapArgsList = []
+
+
+
+if __name__ == "__main__":
+    noIP = False
+
+    print("-"*50)
+    print("FMAP - A faster nmap scanning tool.")
+    print("-"*50)
+
+    # Preform arg checks
+    scanIP = ""
+    try:
+        scanIP = sys.argv[1]
+    except:
+        print("You didn't provide an IP address")
+        print("USAGE: {} <IP Address to Scan>".format(sys.argv[0]))
+        noIP = True
+        sys.exit()
+
+
+    # Setting the IP or hostname to an IPv4 address
+    try:
+        if scanIP == "":
+        	scanIP = socket.gethostbyname(scanIP)
+    except:
+        print("Error: IP is not valid.")
+
+    # Testing to see if the IP provided is online
+    pingTest = os.system("ping -c 1 {} > /tmp/pingX".format(scanIP))
+    if pingTest == 1:
+        print("Error: IP or hostname provided is not online.")
+    elif pingTest == 512:
+        print("Error: IP is not valid.")
+        sys.exit()
+    else:
+        print("INFO | IP is online")
+
+
+
+    if noIP == False:
+        ProgArguments = sys.argv
+        programName = ProgArguments[0]
+        ProgArguments.remove(programName)
+        IP = ProgArguments[0]
+        print("INFO | Scanning {} for open ports.".format(IP))
+        os.system("nmap {} > /home/raav/tempscan/tempmap".format(IP))
+        scan = open("/home/raav/tempscan/tempmap", "r")
+        ports = []
+        scrapPorts = 0
+        for line in scan:
+            currentLine = line.strip()
+            if scrapPorts == 1:
+                if "MAC" in currentLine:
+                    placeholder = 0
+                    break
+                else:
+                    split = currentLine.split("/")
+                    ports.append(split[0])
+            if "PORT" in currentLine:
+                scrapPorts = 1
+        printPorts = ""
+        ports.pop()
+        ports.pop()
+        for port in ports:
+            printPorts = printPorts + port + "|"
+        
+        print("INFO | Found ports: \"{}\"".format(printPorts))
+
+        os.system("rm /home/raav/tempscan/tempmap")
+        portsWComma = ""
+        for port in ports:
+            portsWComma = portsWComma + port + ","
+        portsWComma = portsWComma[:-1]
+        nmapcommand = "nmap {} -p {} {}".format(nmapDefaultArgs, portsWComma, IP)
+        print("INFO | Using command: \"{}\"".format(nmapcommand))
+        os.system(nmapcommand)
