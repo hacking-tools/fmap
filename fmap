@@ -3,6 +3,7 @@ import sys
 import os
 import socket
 
+tempDirectory = "" # TYPE THE DIRECTORY THAT YOU WANT THE TEMPOARY SCANS TO BE PLACED IN.
 
 nmapDefaultArgs = "-sV -sC -T5"
 nmapArgsList = []
@@ -52,7 +53,7 @@ if __name__ == "__main__":
         ProgArguments.remove(programName)
         IP = ProgArguments[0]
         print("INFO | Scanning {} for open ports.".format(IP))
-        os.system("nmap {} > /home/raav/tempscan/tempmap".format(IP))
+        os.system("nmap {} > {}tempmap".format(IP, tempDirectory))
         scan = open("/home/raav/tempscan/tempmap", "r")
         ports = []
         scrapPorts = 0
