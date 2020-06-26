@@ -53,7 +53,7 @@ if __name__ == "__main__":
         ProgArguments.remove(programName)
         IP = ProgArguments[0]
         print("INFO | Scanning {} for open ports.".format(IP))
-        os.system("nmap {} > {}tempmap".format(IP, tempDirectory))
+        os.system("os.system("nmap -p- --min-rate=5000 {} > {}tempmap".format(IP, tempDirectory))
         scan = open("/home/raav/tempscan/tempmap", "r")
         ports = []
         scrapPorts = 0
