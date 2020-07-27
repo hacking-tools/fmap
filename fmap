@@ -3,10 +3,11 @@ import sys
 import os
 import socket
 
-tempDirectory = "" # TYPE THE DIRECTORY THAT YOU WANT THE TEMPOARY SCANS TO BE PLACED IN.
 
 nmapDefaultArgs = "-sV -sC -T5"
 nmapArgsList = []
+USER_TO_USE = ""
+# Set the user to use (cannot be root)
 
 
 
@@ -53,8 +54,8 @@ if __name__ == "__main__":
         ProgArguments.remove(programName)
         IP = ProgArguments[0]
         print("INFO | Scanning {} for open ports.".format(IP))
-        os.system("os.system("nmap -p- --min-rate=5000 {} > {}tempmap".format(IP, tempDirectory))
-        scan = open("/home/raav/tempscan/tempmap", "r")
+        os.system("nmap {} > /home/" + USER_TO_USE + "/tempscan/tempmap".format(IP))
+        scan = open("/home/" + USER_TO_USE + "/tempscan/tempmap", "r")
         ports = []
         scrapPorts = 0
         for line in scan:
@@ -76,7 +77,7 @@ if __name__ == "__main__":
         
         print("INFO | Found ports: \"{}\"".format(printPorts))
 
-        os.system("rm /home/raav/tempscan/tempmap")
+        os.system("rm /home/" + USER_TO_USE + "/tempscan/tempmap")
         portsWComma = ""
         for port in ports:
             portsWComma = portsWComma + port + ","
