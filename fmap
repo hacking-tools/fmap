@@ -6,8 +6,6 @@ import socket
 
 nmapDefaultArgs = "-sV -sC -T5"
 nmapArgsList = []
-USER_TO_USE = ""
-# Set the user to use (cannot be root)
 
 
 
@@ -54,8 +52,8 @@ if __name__ == "__main__":
         ProgArguments.remove(programName)
         IP = ProgArguments[0]
         print("INFO | Scanning {} for open ports.".format(IP))
-        os.system("nmap {} > /home/" + USER_TO_USE + "/tempscan/tempmap".format(IP))
-        scan = open("/home/" + USER_TO_USE + "/tempscan/tempmap", "r")
+        os.system("nmap {} > /tmp/tempmap".format(IP))
+        scan = open("/tmp/tempmap", "r")
         ports = []
         scrapPorts = 0
         for line in scan:
@@ -77,7 +75,7 @@ if __name__ == "__main__":
         
         print("INFO | Found ports: \"{}\"".format(printPorts))
 
-        os.system("rm /home/" + USER_TO_USE + "/tempscan/tempmap")
+        os.system("rm /tmp/tempmap")
         portsWComma = ""
         for port in ports:
             portsWComma = portsWComma + port + ","
